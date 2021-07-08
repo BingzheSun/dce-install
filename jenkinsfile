@@ -18,7 +18,8 @@ pipeline {
     stages {
         stage('get scripts') {
             steps {
-								checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'fd2e51f7-d86c-4b74-8959-dff39b2b77c9', url: 'git@172.30.60.1:/home/git/dce-install.git']]])
+	    									checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'fd2e51f7-d86c-4b74-8959-dff39b2b77c9', url: 'git@172.30.60.1:/home/git/dce-install.git']]])
+
                 sh 'cd /root/workspace/dce-install'
                 sh 'ls'
             }
