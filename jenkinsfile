@@ -1,18 +1,14 @@
 pipeline {
-    agent {
-        node {
-            label 'agent'
-        }
-    }
+    agent any
     environment {
-        machine_mng="/root/workspace/dce-install/govmomi/hosts-mng.sh"
-        hosts="/root/workspace/dce-install/single-ansible/hosts"
-        install_os="/root/workspace/dce-install/single-ansible/books/install-os-requirements.yaml"
-        install_masterone="/root/workspace/dce-install/single-ansible/books/install-masterone.yaml"
-        join_mastertwo="/root/workspace/dce-install/single-ansible/books/join-mastertwo.yaml"
-        join_masterthree="/root/workspace/dce-install/single-ansible/books/join-masterthree.yaml"
-        join_worker="/root/workspace/dce-install/single-ansible/books/join-worker.yaml"
-        license="/root/workspace/dce-install/single-ansible/books/license.yaml"
+        machine_mng="/var/jenkins_home/workspace/dce-install/govmomi/hosts-mng.sh"
+        hosts="/var/jenkins_home/workspace/dce-install/single-ansible/hosts"
+        install_os="/var/jenkins_home/workspace/dce-install/single-ansible/books/install-os-requirements.yaml"
+        install_masterone="/var/jenkins_home/workspace/dce-install/single-ansible/books/install-masterone.yaml"
+        join_mastertwo="/var/jenkins_home/workspace/dce-install/single-ansible/books/join-mastertwo.yaml"
+        join_masterthree="/var/jenkins_home/workspace/dce-install/single-ansible/books/join-masterthree.yaml"
+        join_worker="/var/jenkins_home/workspace/dce-install/single-ansible/books/join-worker.yaml"
+        license="/var/jenkins_home/workspace/dce-install/single-ansible/books/license.yaml"
     }
 
     stages {
