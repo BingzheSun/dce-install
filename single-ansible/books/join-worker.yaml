@@ -1,0 +1,18 @@
+---
+- hosts: worker
+  any_errors_fatal: true
+  serial: 2
+  vars_files:
+  - ../vars/base.yaml
+  - ../vars/dce.yaml
+  tasks:
+  - name: join worker-node
+    shell: |
+      bash -c "$(docker run --rm -i -v /var/run/docker.sock:/var/run/docker.sock {{registry_vip}}/kube-system/dce:{{dce_version}} join -q \
+      --controller-addr {{ctl_node3_ip}} \
+      --parcel-login {{parcel_login}} )"
+    register: check
+
+  - name: show
+    debug: var=check.stdout_lines verbosity=0
+

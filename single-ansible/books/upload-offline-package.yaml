@@ -1,0 +1,22 @@
+- hosts: all
+  any_errors_fatal: true
+  serial: 5
+  vars_files:
+  - ../vars/base.yaml
+  tasks: 
+  - name: upload offline package --- os & dce
+    when: 
+      - inventory_hostname in groups['masterone']
+    shell: |
+      wget "https://qiniu-download.daocloud.io/UNVERIFIED/DaoCloud_Enterprise/4.0.6-dev/dce-4.0.6-dev-34710.tar.gz?e=1625541942&attname=&token=2vSr2FDxRDGxNRYefHsRYro80aqMi5bzCrtDgy8u:bxrCFQmRxOYYaCtnWhn9dH1qrEQ="
+
+  - name: upload offline package --- os
+    when: 
+      - inventory_hostname in groups['anotherfour']
+    shell: |
+      wget "https://qiniu-download.daocloud.io/UNVERIFIED/DaoCloud_Enterprise/4.0.6-dev/dce-4.0.6-dev-34710-os-requirements.tar.gz?e=1625541942&attname=&token=2vSr2FDxRDGxNRYefHsRYro80aqMi5bzCrtDgy8u:in_9R5gfu6tQbmKF_hp0qQL6Ab8="
+
+  - name: offline package --- change file name
+    shell: |
+      h=`ls | grep dce | sed 's/?.*$//g'`
+      mv `ls | grep dce` $h

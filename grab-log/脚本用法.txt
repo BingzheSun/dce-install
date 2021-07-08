@@ -1,0 +1,10 @@
+### logDiff.sh
+用法：
+（1）测试前 ， ./logDiff.sh
+（2）做各自测试
+（3）测试后，./logDiff.sh diff
+会 输出 所有 kube system 下的 pod， 在 测试过程中 产生的新装日志中，是有有 error 或者 panic
+
+### logDiff_v2.sh
+ V2 ， 会输出  测试过程中， 某个kube system 的pod 是否发生过重启 （例如 pod 内 crash 导致 pod 重启）
+

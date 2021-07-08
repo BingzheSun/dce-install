@@ -1,0 +1,29 @@
+---
+- hosts: masterthree
+  any_errors_fatal: true
+  serial: 1
+  vars_files:
+  - ../vars/base.yaml
+  - ../vars/dce.yaml
+  tasks:
+  - name: join masterthree
+    shell: |
+      bash -c "$(docker run --rm -i -v /var/run/docker.sock:/var/run/docker.sock {{registry_vip}}/kube-system/dce:{{dce_version}} join -q \
+      --controller-addr {{ctl_node2_ip}} \
+      --with-controller --with-registry)"
+    register: check
+
+  - name: show
+    debug: var=check.stdout_lines verbosity=0
+    
+  - name: check whether join master-node successfully
+    shell: |
+      for i in $(seq 1 30); do
+        if [[ `kubectl get no | grep $(hostname)` ]]; then
+          break
+        else
+          sleep 2
+          echo $i ------ check if $(hostname)  exists
+        fi
+      done
+      kubectl get no | grep $(hostname)

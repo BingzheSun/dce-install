@@ -1,0 +1,6 @@
+ansible_ssh_user: root
+ansible_ssh_pass: dangerous
+repo7: "7"
+repo8: "8"
+system_iso: "rhel-server-7.9-x86_64-dvd.iso"
+dce_version: "4.0.5-34697"

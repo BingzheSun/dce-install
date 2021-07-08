@@ -1,0 +1,42 @@
+- hosts: masterone
+  any_errors_fatal: true
+  serial: 1
+  vars_files:
+  - ../vars/base.yaml
+  - ../vars/dce.yaml
+  tasks:
+  - name: load images
+    shell: |
+      docker image load -i dce-{{dce_version}}.imgs.tar
+
+  - name: check whether the upload is successful
+    shell: |
+      [[ `docker image ls | grep {{dce_version}} | wc -l` -gt 1 ]]
+
+  - name: install dce
+    shell: |
+      bash -c "$(docker run -v /var/run/docker.sock:/var/run/docker.sock --rm daocloud.io/daocloud/dce:{{dce_version}} install -q \
+      --reliability-level {{reliability_level}} \
+      --cluster-sizing {{cluster_sizing}} \
+      --scan-driver {{scan_drive}} \
+      --vip-provision-mode {{vip_provision_mode}} \
+      --controller-vip {{controller_vip}} \
+      --registry-vip {{registry_vip}} \
+      --registry-storage-type {{registry_storage_type}} \
+      --network-driver {{network_driver}} \
+      --parcel-stack {{parcel_stack}} \
+      --parcel-int-mng {{parcel_int_mng}} \
+      --parcel-login {{parcel_login}} \
+      --parcel-outbound {{parcel_outbound}} \
+      --parcel-int-calico {{parcel_int_calico}} \
+      --parcel-int-ovs {{parcel_int_ovs}} \
+      --parcel-int-storage {{parcel_int_storage}})"
+    register: check
+
+  - name: show
+    debug: var=check.stdout_lines verbosity=0
+    
+
+  - name: check whether install dce successfully
+    shell: |
+      curl -kI https://{{controller_vip}}:443/ | grep HTTP

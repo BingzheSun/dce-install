@@ -1,0 +1,32 @@
+---
+- hosts: all
+  any_errors_fatal: true
+  serial: 5
+  vars_files:
+  - ../vars/base.yaml
+  tasks: 
+  - name: unzip dce.tar.gz ...
+    when:
+      - inventory_hostname in groups['masterone']
+    shell: |
+      tar xvf dce-{{dce_version}}.tar.gz --strip-components 1
+      rm -f dce-{{dce_version}}.tar.gz
+
+  - name: unzip os.tar.gz file ...
+    when:      
+      - inventory_hostname in groups['anotherfour']
+    shell: |
+      tar xvf dce-{{dce_version}}-os-requirements.tar.gz
+      
+  - name: install os-requirements ...
+    shell: |
+      sleep 1m
+      ./os-requirements -q -y --repo-dir $(pwd)/os-requirements-resources/repo/centos-{{system_version}}/
+    register: check
+
+  - name: show
+    debug: var=check.stdout_lines verbosity=0
+
+  - name: check whether install successfully
+    shell: docker --version
+  

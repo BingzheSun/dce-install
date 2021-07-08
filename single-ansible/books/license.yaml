@@ -1,0 +1,14 @@
+---
+- hosts: masterone
+  any_errors_fatal: true
+  serial: 1
+  vars_files: 
+  - ../vars/base.yaml
+  - ../vars/dce.yaml  
+  - ../vars/license.yaml
+  tasks:
+  - name: add license https://{{controller_vip}}
+    shell: |
+      docker exec -i -e ETCDCTL_API=2 $(docker ps | grep dce-etcd | grep -v pause | awk '{print $1}') etcdctl set /DCE/v1/config/license \
+      {{license}}
+      sleep 1m

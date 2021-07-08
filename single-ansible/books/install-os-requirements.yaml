@@ -1,0 +1,50 @@
+---
+- hosts: all
+  any_errors_fatal: true
+  serial: 5
+  vars_files:
+  - ../vars/base.yaml
+  tasks: 
+  - name: unzip dce.tar.gz ...
+    when:
+      - inventory_hostname in groups['masterone']
+    shell: |
+      tar xvf dce-{{dce_version}}.tar.gz --strip-components 1
+      rm -f dce-{{dce_version}}.tar.gz
+
+  - name: unzip os.tar.gz file ...
+    when:      
+      - inventory_hostname in groups['anotherfour']
+    shell: |
+      tar xvf dce-{{dce_version}}-os-requirements.tar.gz
+      
+  - name: install os-requirements (repo7) ...
+    when:
+      - ansible_machine == 'x86_64'
+      - ansible_distribution_version | int >= 7
+      - ansible_distribution_version | int < 8    
+    shell: |
+      sleep 1m
+      ./os-requirements -q -y --repo-dir $(pwd)/os-requirements-resources/repo/centos-{{repo7}}/
+
+    register: check
+
+  - name: show
+    debug: var=check.stdout_lines verbosity=0
+
+  - name: install os-requirements (repo8) ...
+    when:
+      - ansible_machine == 'x86_64'
+      - ansible_distribution_version | int >= 8
+      - ansible_distribution_version | int < 9 or ansible_distribution_version == 'V10'
+    shell: |
+      sleep 1m
+      ./os-requirements -q -y --repo-dir $(pwd)/os-requirements-resources/repo/centos-{{repo8}}/
+
+    register: check
+
+  - name: show
+    debug: var=check.stdout_lines verbosity=0
+
+
+  
