@@ -15,7 +15,7 @@ pipeline {
         stage('get scripts') {
             steps {
 	    	checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: '92033a18-167e-49f5-bc9f-6f6d707f65a4', url: 'https://github.com/BingzheSun/dce-install']]])
-                sh 'cd /root/workspace/dce-install'
+                sh 'cd /var/jenkins_home/workspace/dce-install'
                 sh 'ls'
             }
         }
